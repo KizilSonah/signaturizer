@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="styles.css">
+    <link rel="icon" type="image/x-icon" href="favicon.ico">
+    <script src="https://unpkg.com/pdf-lib"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.7.1/jszip.min.js"></script>
+    <title>Signaturizer</title>
+</head>
+<body>
+    <div id="header">
+        <div id="title">Signaturizer</div>
+        <div id="subtitle">Convert .pdf into sections for bookbinding</div>
+    </div>
+    <div class="wrapper">
+        <div id="inputsDiv">
+            <div class="empty" id="dropArea">
+                <div id="dropAreaContent">
+                    <img src=""/>
+                    <div id="text"></div>
+                </div>
+            </div>
+            <input type="file" id="pdfInput" accept="application/pdf" multiple hidden>
+        </div>
+        <div id="paramsDiv">
+            <input type="text" id="pdfName"></input>
+            <label id="pdfSize"></label>
+            <div id="numPages"></div>
+            <div id="pagesPerDiv">
+                <img id="auto" src="./svgs/robot.svg"/>
+                <div id="autotext"></div>
+                <div id="userPrimarySection">
+                    <div id="divType"><div id="divTypeOption">Pages</div>per signature: </div>
+                    <div class="numberInput">
+                        <button class="numBut" id="minus">-</button>
+                        <input id="pagesPer" class="quantity" min="4" value="4" type="number">
+                        <button class="numBut" id="plus">+</button>
+                    </div>
+                </div>
+                <div id="structure"></div>
+            </div>
+            <div id="tagsDiv">
+                <div id="checkLabel">Options:</div>
+                <div id="tagsSection">
+                    <button class="tag" id="checkToZip"><div class="checkmark">✗</div><div id="text">Download as Zip</div></button>
+                    <button class="tag" id="checkToAuto"><div class="checkmark">✗</div><div id="text">Autodistribute signatures</div></button>
+                </div>
+            </div>
+            <button id="process">Process File</button>
+        </div>
+    </div>
+    <div id="effect"></div>
+    <script src="script.js"></script>
+</body>
+</html>
