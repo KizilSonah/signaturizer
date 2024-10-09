@@ -30,7 +30,8 @@ let sets = [{groups: 0, pages: 0}, {groups: 0, pages: 0}];
 let _sets = [{groups: 0, pages: 0}, {groups: 0, pages: 0}];
 let tmp_sets = [{groups: 0, pages: 0}, {groups: 0, pages: 0}];
 
-const reader = new FileReader(); reader.onload = (async (e) => {
+const reader = new FileReader(); 
+reader.onload = (async (e) => {
     file = await PDFLib.PDFDocument.load(e.target.result);
     //after file mounted
     pageCount = file.getPageCount();
@@ -38,10 +39,20 @@ const reader = new FileReader(); reader.onload = (async (e) => {
     pagenumber.innerText = `${pageCount} pp.`;
     pagesPer.setAttribute('max', maxDivs);
     handleNumberChange();
+    if (pageCount < 16) {
+        handleError("Please use a file bigger than 16 pages.", "Error with PDF");
+    }
 });
 
 setDACotent('default');
 setParamsDivEnabled(false);
+
+function handleError(caption, head) {
+    alert(`${head}\r\n${caption}`);
+    PDFok = false;
+    setParamsDivEnabled(false);
+    fileLoaded = false;
+}
 
 //#region TOGGLES
 function toggleUseZip() {
@@ -112,7 +123,7 @@ function handleInput(_file) {
         rawFile = _file;
         onPDFChange();
     } else {
-        alert("Too much!\n Try a smaller file (<75MiB)");
+        handleError("Try a smaller file (<75MiB)", "File too heavy!");
     }
 }
 
@@ -121,16 +132,9 @@ function handleInput(_file) {
 //#region PDF Process
 function onPDFChange() {
     if (rawFile && rawFile.type !== 'application/pdf') {
-      alert("Please upload a PDF file.");
-      e.target.value = '';
-      PDFok = false;
-      setParamsDivEnabled(false);
-      return;
-    }
-
-    if (rawFile == undefined) {
-        PDFok = false;
-        setParamsDivEnabled(false);
+      handleError("Please upload a PDF file.", "Error with file");
+    } else if (rawFile == undefined) {
+        handleError("Please select a PDF file.", "Error with file");
     } else {
         PDFok = true;
         reader.readAsArrayBuffer(rawFile);
@@ -473,7 +477,7 @@ function distribute(forced, _nGroups, _nPages){
     const nPages = (forced) ? _nPages : parseInt(typePages ? pagesPerValue : pagesPerValue * 4);
     const nGroups = (forced) ? _nGroups : Math.floor((pageCount / nPages));
     const residual = pageCount - (nPages * nGroups);
-    sets = [{groups: nPages, pages: nGroups}, {groups: 0, pages: 0}];
+    sets = [{groups: nGroups, pages: nPages}, {groups: 0, pages: 0}];
 
     if (residual != 0) {
         sets[1].groups = Math.ceil(residual / 4);
